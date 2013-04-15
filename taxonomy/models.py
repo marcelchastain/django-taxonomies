@@ -5,7 +5,7 @@ from django.contrib.contenttypes import generic
 class TaxonomyGroup(models.Model):
     """Highest level of taxonomy.  This is the name assigned to the list of
     related taxonomy items"""
-    name = models.CharField(max_length=25, db_index=True)
+    name = models.CharField(max_length=75, db_index=True)
 
     def __unicode__(self):
         return u'%s' %self.name
@@ -15,9 +15,10 @@ class TaxonomyGroup(models.Model):
         ordering = ['name']
 
 class TaxonomyItem(models.Model):
-    """An actual categorization which would be assigned to some other model"""
+    """An actual categorization which would be assigned to some instance"""
     taxonomy_group = models.ForeignKey(TaxonomyGroup, db_index=True)
-    name = models.CharField(max_length=25, db_index=True)
+    parent = models.ForeignKey('TaxonomyItem', blank=True, null=True, db_index=True)
+    name = models.CharField(max_length=75, db_index=True)
 
     def __unicode__(self):
         return u'%s' %self.name
@@ -30,17 +31,17 @@ class TaxonomyItem(models.Model):
         tmap = self.taxonomymap_set.all()
         return [i.content_object for i in tmap]
 
-    def add_member(self, model):
-        """Add a mapping of this taxon to the model.
+    def add_member(self, instance):
+        """Add a mapping of this taxon to the instance.
         This is a shortcut to avoid messing with the TaxonomyMap objects
         and the extra complexities of setting the correct values for
         GenericForeignKey."""
 
         #Need to throw exception if model is missing, etc
-        model_type = ContentType.objects.get_for_model(model)
+        model_type = ContentType.objects.get_for_model(instance)
         tmap = TaxonomyMap()
         tmap.content_type = model_type
-        tmap.object_id = model.id
+        tmap.object_id = instance.id
         tmap.taxonomy_item = self
         tmap.save()
 
@@ -49,7 +50,7 @@ class TaxonomyItem(models.Model):
         ordering = ['name']
 
 class TaxonomyMap(models.Model):
-    """Map models to a TaxonomyItem"""
+    """Map instances to a TaxonomyItem"""
     taxonomy_item = models.ForeignKey(TaxonomyItem, db_index=True)
     content_type = models.ForeignKey(ContentType, db_index=True)
     object_id = models.PositiveIntegerField()
@@ -79,23 +80,3 @@ class TaxonomyMember(models.Model):
     class Meta:
         abstract = True
 
-## Figure out if we're in a test environment or not
-## from http://www.thebitguru.com/blog/view/246-Using%20custom%20settings%20in%20django%20tests
-## the last two suggestions on there are not working... python version difference, maybe?
-from os import sys
-TEST = False
-manage_command = filter(lambda x: x.find('manage.py') != -1, sys.argv)
-if len(manage_command) != 0:
-  command = sys.argv.index(manage_command[0]) + 1
-  if command < len(sys.argv):
-    TEST = (sys.argv[command] == "test" or sys.argv[command] == "test_coverage")
-
-if TEST:
-    # Only load classes here if in a test environment for testing.
-    # Tables for any models found here do not get created when running
-    # syncdb in a live environment, only when running manage.py test
-    class TaxonomyTest(TaxonomyMember):
-        name = models.CharField(max_length=10)
-
-        def __unicode__(self):
-            return u'%s' %self.name
