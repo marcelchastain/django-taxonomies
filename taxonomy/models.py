@@ -21,7 +21,14 @@ class TaxonomyItem(models.Model):
     name = models.CharField(max_length=75, db_index=True)
 
     def __unicode__(self):
-        return u'%s' %self.name
+        if self.parent:
+            return u"%s's %s" % (self.parent.name.title(), self.name)
+        return u'%s' % self.name
+
+    def get_children(self):
+        return (TaxonomyItem.objects\
+                .filter(taxonomy_group=self.group)
+                .filter(parent=self))
 
     def get_members(self):
         """Returns a list of objects that have this item as
