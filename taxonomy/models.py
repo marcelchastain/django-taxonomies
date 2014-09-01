@@ -11,6 +11,7 @@ from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
 
+
 class TaxonomyGroup(models.Model):
     """
     Highest level of taxonomy.  This is the name assigned to the list of
@@ -19,6 +20,7 @@ class TaxonomyGroup(models.Model):
     >>> tgroup = TaxonomyGroup.objects.create(name='age')
     """
     name = models.CharField(max_length=75, db_index=True)
+    taxonomy_items = generic.GenericRelation('taxonomy.TaxonomyItem', related_name='taxonomyitem_set')
 
     def __unicode__(self):
         return self.name
