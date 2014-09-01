@@ -2,6 +2,10 @@ from rest_framework import serializers, pagination
 from .models import (TaxonomyGroup, TaxonomyItem)
 
 
+class RecursiveField(serializers.Serializer):
+    def to_native(self, value):
+        return self.parent.to_native(value)
+
 class TaxonomyItemSerializer(serializers.ModelSerializer):
     taxonomy_group_name = serializers.Field(source='taxonomy_group.name')
     parent_name = serializers.Field(source='parent.name')
@@ -17,7 +21,7 @@ class TaxonomyItemSerializer(serializers.ModelSerializer):
 
 
 class MinimalTaxonomyItemSerializer(serializers.ModelSerializer):
-    children = MinimalTaxonomyItemSerializer(source='taxonomyitem_set', many=True, read_only=True)
+    children = RecursiveField(source='taxonomyitem_set', many=True, read_only=True)
 
     class Meta:
         model = TaxonomyItem
