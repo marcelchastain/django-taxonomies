@@ -13,8 +13,8 @@ class TaxonomyGroupSerializer(serializers.ModelSerializer):
         return obj.taxonomyitem_set.count()
 
 class TaxonomyItemSerializer(serializers.ModelSerializer):
-    taxonomy_group_name = serializers.Field(source='taxonomy_group__name')
-    parent_name = serializers.Field(source='parent__name')
+    taxonomy_group_name = serializers.Field(source='taxonomy_group.name')
+    parent_name = serializers.Field(source='parent.name')
     map_count = serializers.SerializerMethodField('get_map_count')
 
     class Meta:
