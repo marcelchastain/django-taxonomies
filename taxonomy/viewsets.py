@@ -1,6 +1,7 @@
 from rest_framework import viewsets, response, status, permissions, parsers
 from core.permissions import IsAdminUserOrReadOnly
 from .serializers import TaxonomyItemSerializer, TaxonomyGroupSerializer
+from .models import TaxonomyGroup, TaxonomyItem
 
 
 class ShowroomMixin(object):
@@ -26,8 +27,10 @@ class ShowroomMixin(object):
 class TaxonomyGroupViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUserOrReadOnly,)
     serializer_class = TaxonomyGroupSerializer
+    model = TaxonomyGroup
 
 
 class TaxonomyItemViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUserOrReadOnly,)
     serializer_class = TaxonomyItemSerializer
+    model = TaxonomyItem
