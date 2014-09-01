@@ -29,7 +29,7 @@ class MinimalTaxonomyItemSerializer(serializers.ModelSerializer):
 
 class TaxonomyGroupSerializer(serializers.ModelSerializer):
     item_count = serializers.SerializerMethodField('get_item_count')
-    taxonomy_items = MinimalTaxonomyItemSerializer(many=True, read_only=True)
+    taxonomy_items = MinimalTaxonomyItemSerializer(source='taxonomyitem_set', many=True, read_only=True)
 
     class Meta:
         model = TaxonomyGroup

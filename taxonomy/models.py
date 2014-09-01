@@ -20,7 +20,6 @@ class TaxonomyGroup(models.Model):
     >>> tgroup = TaxonomyGroup.objects.create(name='age')
     """
     name = models.CharField(max_length=75, db_index=True)
-    taxonomy_items = generic.GenericRelation('taxonomy.TaxonomyItem', related_name='taxonomyitem_set')
 
     def __unicode__(self):
         return self.name
