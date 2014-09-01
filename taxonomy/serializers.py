@@ -7,7 +7,7 @@ class TaxonomyGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyGroup
-        fields = ('id', 'name')
+        fields = ('id', 'name', 'item_count')
 
     def get_item_count(self, obj):
         return obj.taxonomyitem_set.count()
@@ -17,7 +17,7 @@ class TaxonomyItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyItem
-        fields = ('id', 'taxonomy_group', 'parent', 'name')
+        fields = ('id', 'taxonomy_group', 'parent', 'name', 'map_count')
 
     def get_map_count(self, obj):
         return obj.taxonomymap_set.count()
