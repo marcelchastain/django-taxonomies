@@ -46,7 +46,7 @@ class TaxonomyItem(models.Model):
 
     def get_children(self):
         return (TaxonomyItem.objects\
-                .filter(taxonomy_group=self.group)
+                .filter(taxonomy_group=self.taxonomy_group)
                 .filter(parent=self))
 
     def get_members(self):

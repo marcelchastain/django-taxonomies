@@ -17,10 +17,11 @@ class TaxonomyItemSerializer(serializers.ModelSerializer):
 
 
 class MinimalTaxonomyItemSerializer(serializers.ModelSerializer):
+    children = MinimalTaxonomyItemSerializer(source='taxonomyitem_set', many=True, read_only=True)
 
     class Meta:
         model = TaxonomyItem
-        fields = ('id', 'taxonomy_group', 'parent', 'name')
+        fields = ('id', 'taxonomy_group', 'parent', 'name', 'children')
 
     def get_map_count(self, obj):
         return obj.taxonomymap_set.count()
