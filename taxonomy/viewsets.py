@@ -28,6 +28,7 @@ class TaxonomyGroupViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAdminUserOrReadOnly,)
     serializer_class = TaxonomyGroupSerializer
     model = TaxonomyGroup
+    filter_fields = ('name',)
 
 
 class TaxonomyItemViewSet(viewsets.ModelViewSet):
