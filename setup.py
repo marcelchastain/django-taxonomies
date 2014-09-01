@@ -8,14 +8,14 @@ setup(name = "django-taxonomies",
       author = "Justin Michalicek",
       author_email = "jmichalicek@gmail.com",
       url = "https://github.com/jmichalicek/django-taxonomies",
-      packages = ['taxonomy', 'taxonomy.templatetags'],
+      packages = ['taxonomy', 'taxonomy.templatetags', 'taxonomy.migrations'],
       #'package' package must contain files (see list above)
       package_data = {'taxonomy' : files },
       install_requires = dependencies,
       #'runner' is in the root.
       #scripts = ["runner"],
-      long_description = """Really long text here.""" 
+      long_description = """Really long text here."""
       #
       #This next part it for the Cheese Shop, look a little down the page.
-      #classifiers = []     
-) 
+      #classifiers = []
+)
