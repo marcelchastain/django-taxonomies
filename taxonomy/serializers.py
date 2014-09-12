@@ -8,13 +8,16 @@ class RecursiveField(serializers.Serializer):
 
 class TaxonomyItemSerializer(serializers.ModelSerializer):
     taxonomy_group_name = serializers.Field(source='taxonomy_group.name')
+    taxonomy_group_display_name = serializers.Field(source='taxonomy_group.display_name')
     parent_name = serializers.Field(source='parent.name')
+    parent_display_name = serializers.Field(source='parent.display_name')
     map_count = serializers.SerializerMethodField('get_map_count')
 
     class Meta:
         model = TaxonomyItem
         fields = ('id', 'taxonomy_group', 'parent', 'name', 'map_count',
-                'taxonomy_group_name', 'parent_name')
+                'taxonomy_group_name', 'taxonomy_group_display_name',
+                'parent_name', 'parent_display_name')
 
     def get_map_count(self, obj):
         return obj.taxonomymap_set.count()
@@ -32,7 +35,7 @@ class RecursiveTaxonomyItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyItem
-        fields = ('id', 'taxonomy_group', 'parent', 'name', 'children')
+        fields = ('id', 'taxonomy_group', 'parent', 'display_name', 'name', 'children')
 
 
 class TaxonomyGroupSerializer(serializers.ModelSerializer):
@@ -41,7 +44,7 @@ class TaxonomyGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyGroup
-        fields = ('id', 'name', 'item_count', 'taxonomy_items')
+        fields = ('id', 'name', 'display_name', 'item_count', 'taxonomy_items')
 
     def get_item_count(self, obj):
         return obj.taxonomyitem_set.count()
@@ -52,7 +55,7 @@ class MinimalTaxonomyGroupSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyGroup
-        fields = ('id', 'name', 'item_count')
+        fields = ('id', 'name', 'display_name', 'item_count')
 
     def get_item_count(self, obj):
         return obj.taxonomyitem_set.count()
