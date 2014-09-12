@@ -20,13 +20,20 @@ class TaxonomyGroup(models.Model):
     >>> tgroup = TaxonomyGroup.objects.create(name='age')
     """
     name = models.CharField(max_length=75, db_index=True)
+    display_name = models.CharField(max_length=150, blank=True, null=True)
 
     def __unicode__(self):
         return self.name
 
     class Meta:
         #Seems the most likely wanted ordering for anyone... and it's what I want
-        ordering = ['name']
+        ordering = ['display_name']
+
+    def save(self, *args, **kwargs):
+        if not self.display_name:
+            self.display_name = self.name
+        return super(TaxonomyGroup, self).save(*args, **kwargs)
+
 
 class TaxonomyItem(models.Model):
     """
