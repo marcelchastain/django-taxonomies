@@ -20,7 +20,7 @@ class TaxonomyGroup(models.Model):
     >>> tgroup = TaxonomyGroup.objects.create(name='age')
     """
     name = models.CharField(max_length=75, db_index=True)
-    display_name = models.CharField(max_length=150, blank=True, null=True)
+    display_name = models.CharField(max_length=150, blank=True)
 
     def __unicode__(self):
         return self.name
