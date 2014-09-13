@@ -10,14 +10,13 @@ class TaxonomyItemSerializer(serializers.ModelSerializer):
     taxonomy_group_name = serializers.Field(source='taxonomy_group.name')
     taxonomy_group_display_name = serializers.Field(source='taxonomy_group.display_name')
     parent_name = serializers.Field(source='parent.name')
-    parent_display_name = serializers.Field(source='parent.display_name')
     map_count = serializers.SerializerMethodField('get_map_count')
 
     class Meta:
         model = TaxonomyItem
         fields = ('id', 'taxonomy_group', 'parent', 'name', 'map_count',
                 'taxonomy_group_name', 'taxonomy_group_display_name',
-                'parent_name', 'parent_display_name')
+                'parent_name',)
 
     def get_map_count(self, obj):
         return obj.taxonomymap_set.count()
@@ -35,7 +34,7 @@ class RecursiveTaxonomyItemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TaxonomyItem
-        fields = ('id', 'taxonomy_group', 'parent', 'display_name', 'name', 'children')
+        fields = ('id', 'taxonomy_group', 'parent', 'name', 'children')
 
 
 class TaxonomyGroupSerializer(serializers.ModelSerializer):
