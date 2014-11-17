@@ -72,11 +72,11 @@ class TaxonomyItem(models.Model):
 
         #Need to throw exception if model is missing, etc
         model_type = ContentType.objects.get_for_model(instance)
-        tmap = TaxonomyMap()
-        tmap.content_type = model_type
-        tmap.object_id = instance.id
-        tmap.taxonomy_item = self
-        tmap.save()
+        tmap, created = TaxonomyMap.objects.get_or_create(
+                    content_type=model_type,
+                    object_id=instance.id,
+                    taxonomy_item=self)
+        return tmap
 
     class Meta:
         #Again, seems the most likely wanted ordering for anyone and it's what I want
