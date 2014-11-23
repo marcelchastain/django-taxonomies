@@ -10,6 +10,7 @@ TODO:
 from django.db import models
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.contenttypes import generic
+from django.db.models.signals import post_save
 
 
 class TaxonomyGroup(models.Model):
@@ -101,6 +102,16 @@ class TaxonomyMap(models.Model):
     def __unicode__(self):
         return u'%s - %s' %(self.taxonomy_item, self.content_object)
 
+    @classmethod
+    def post_save(cls, sender, instance, created, raw, **kwargs):
+        ''' send post_save signal on the related object'''
+        if raw:
+            # loading data from a fixture or something unsafe
+            return
+
+        obj = instance.content_object
+        post_save.send(sender=obj.__class__, instance=obj)
+
 class TaxonomyMember(models.Model):
     """An abstract class that models can inherit from to be taxonomized."""
     def get_taxonomies(self, group):
@@ -130,3 +141,6 @@ class TaxonomyMember(models.Model):
     class Meta:
         abstract = True
 
+
+
+post_save.connect(TaxonomyMap.post_save, sender=TaxonomyMap)
