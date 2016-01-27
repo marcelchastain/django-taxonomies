@@ -1,5 +1,5 @@
 from rest_framework import serializers, pagination
-from .models import (TaxonomyGroup, TaxonomyItem)
+from .models import (TaxonomyGroup, TaxonomyItem, TaxonomyMap)
 
 
 class RecursiveField(serializers.Serializer):
@@ -59,3 +59,13 @@ class MinimalTaxonomyGroupSerializer(serializers.ModelSerializer):
     def get_item_count(self, obj):
         return obj.taxonomyitem_set.count()
 
+
+class TaxonomyMapSerializer(serializers.ModelSerializer):
+    taxonomy_group = serializers.Field(source='taxonomy_item.taxonomy_group.pk')
+    taxonomy_group_name = serializers.Field(source='taxonomy_item.taxonomy_group.name')
+    taxonomy_item_name = serializers.Field(source='taxonomy_item.name')
+    content_type_model = serializers.Field(source='content_type.model')
+
+    class Meta:
+        model = TaxonomyMap
+        exclude = ()
